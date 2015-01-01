@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -12,18 +13,43 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
 	
-	TextView textView;
+	Button btnParse;
+	ListView listApps;
+	String xmlData;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView) findViewById(R.id.textView1);
+        btnParse = (Button) findViewById(R.id.btnParse);
+        listApps = (ListView) findViewById(R.id.listApps);
+        
+        btnParse.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ParseApplications parse = new ParseApplications(xmlData);
+				boolean operationStatus = parse.process();
+				if (operationStatus) {
+					ArrayList<Application> allApps = parse.getApplications();
+					ArrayAdapter<Application> adapter = new ArrayAdapter<Application>(MainActivity.this, R.layout.list_item, allApps);
+					listApps.setVisibility(listApps.VISIBLE);
+					listApps.setAdapter(adapter);
+				} else {
+					Log.d("MainActivity", "Error parsing file.");
+				}
+			}
+		});
         
         new DownloadData().execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml");
     }
@@ -63,7 +89,7 @@ public class MainActivity extends Activity {
     	
     	protected void onPostExecute(String result) {
 			Log.d("OnPostExecute", myXmlData);
-			textView.setText(myXmlData);
+			xmlData = myXmlData;
 		}
     	
     	private String downloadXML(String theUrl) throws IOException {

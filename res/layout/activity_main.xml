@@ -8,12 +8,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.rishadafc.top10downloader.MainActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <Button
+        android:id="@+id/btnParse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Parse XML" />
 
-   
+    <ListView
+        android:id="@+id/listApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnParse"
+        android:layout_below="@+id/btnParse"
+        android:layout_alignParentRight="@+id/btnParse"
+        android:visibility="invisible" >
+    </ListView>
 
 </RelativeLayout>
